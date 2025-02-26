@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Models\Orang_tua;
 use App\Models\Pelanggaran;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class siswa extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = 'siswa';
     public $timestamps = false; // Tambahkan ini jika tidak ingin timestamps
 

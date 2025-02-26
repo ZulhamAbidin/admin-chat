@@ -3,15 +3,21 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Firefly\FilamentBlog\Traits\HasBlog;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
+    use HasBlog;
+    public function canComment(): bool
+    {
+        // your conditional logic here
+        return true;
+    }
     /**
      * The attributes that are mass assignable.
      *

@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,
-            fn() => view('filament.includes.chat-bubble')->render()
+            fn() => view('filament.sisipkan.chat-bubble')->render()
         );
     }
 }

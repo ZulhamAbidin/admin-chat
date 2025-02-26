@@ -8,6 +8,14 @@
     <iframe id="chat-iframe" src="{{ Auth::user()->name === 'Admin User' ? url('chatify') : url('chatify/1') }}" style="width: 100%; height: 100%; border: none;">
     </iframe>
 </div>
+<style>
+    /* Sembunyikan menu News Letters dan Share Snippets */
+    [href*="newsletters"], /* Sesuaikan dengan URL yang muncul di menu */
+    [href*="settings"], /* Sesuaikan dengan URL yang muncul di menu */
+    [href*="share-snippets"] {
+        display: none !important;
+    }
+</style>
 
 <script>
     function toggleChat() {

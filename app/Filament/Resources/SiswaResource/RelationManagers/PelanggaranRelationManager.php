@@ -19,7 +19,7 @@ class PelanggaranRelationManager extends RelationManager
         ->schema([
             Forms\Components\Select::make('pelanggaran_id')
                 ->label('Jenis Pelanggaran')
-                ->relationship('pelanggarans', 'jenis') // Ambil data dari tabel pelanggaran
+                ->relationship('pelanggarans', 'jenis')
                 ->preload()
                 ->searchable()
                 ->required()

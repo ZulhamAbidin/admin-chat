@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PelanggaranResource extends Resource
 {
     protected static ?string $model = Pelanggaran::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
+    protected static ?string $navigationGroup = 'Data Sekolah';
 
     public static function form(Form $form): Form
     {

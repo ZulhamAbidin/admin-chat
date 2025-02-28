@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use Filament\Forms\Form;
 use App\Models\Orang_tua;
@@ -16,18 +17,19 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\BadgeColumn;
+use App\Filament\Resources\KelasResource;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\SiswaResource\Pages;
-use App\Filament\Resources\PelanggaranResource\RelationManagers\SiswaResourceRelationManager;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SiswaResource\RelationManagers;
+use App\Filament\Resources\PelanggaranResource\RelationManagers\SiswaResourceRelationManager;
 
 class SiswaResource extends Resource
 {
     protected static ?string $model = Siswa::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationGroup = 'Data Sekolah';
 
     public static function form(Form $form): Form
     {
@@ -49,20 +51,19 @@ class SiswaResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        Select::make('kelas')
-                            ->label('Kelas')
-                            ->options([
-                                'X' => 'Kelas X',
-                                'XI' => 'Kelas XI',
-                                'XII' => 'Kelas XII',
-                            ])
-                            ->searchable()
-                            ->required(),
-
                         Textarea::make('alamat')
                             ->label('Alamat')
                             ->maxLength(500)
                             ->columnSpanFull(),
+
+                        Select::make('idKelas')
+                            ->label('Nama Kelas')
+                            ->placeholder('Pilih Nama Kelas')
+                            ->searchable()
+                            ->helperText('Tambah Kelas jika belum tersedia.')
+                            ->options(
+                                Kelas::all()->pluck('namaKelas', 'id')
+                            ),
 
                         DatePicker::make('tanggal_lahir')
                             ->label('Tanggal Lahir')
@@ -74,7 +75,7 @@ class SiswaResource extends Resource
                                 return \App\Models\User::where('role', 'ortu')
                                     ->where(function ($query) use ($record) {
                                         $query->whereDoesntHave('siswa')
-                                              ->orWhere('id', $record?->user_id); // Pastikan user yang sudah dipilih tetap muncul
+                                              ->orWhere('id', $record?->user_id);
                                     })
                                     ->pluck('name', 'id');
                             })
@@ -83,17 +84,10 @@ class SiswaResource extends Resource
 
                         Forms\Components\Select::make('pelanggarans')
                             ->label('Pelanggaran')
-                            ->multiple() // Bisa memilih lebih dari satu
-                            ->relationship('pelanggarans', 'jenis') // Ambil data dari tabel pelanggaran
+                            ->multiple()
+                            ->relationship('pelanggarans', 'jenis')
                             ->preload()
                             ->searchable(),
-
-
-                        // ->searchable()
-                        // ->preload()
-                        // ->required(),
-
-
                     ]),
             ]);
     }
@@ -115,6 +109,12 @@ class SiswaResource extends Resource
                 TextColumn::make('kelas')
                     ->label('Kelas')
                     ->sortable(),
+                
+                TextColumn::make('kelas.namaKelas')
+                    ->label('Kelas')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('Belum Ditambahkan'),
 
                 TextColumn::make('user.name')
                     ->label('Nama Orang Tua')
@@ -142,7 +142,6 @@ class SiswaResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\Action::make('lihat_pelanggaran')
                     ->label('Lihat Pelanggaran')
                     ->icon('heroicon-o-eye')
@@ -151,15 +150,6 @@ class SiswaResource extends Resource
                         'pelanggarans' => $record->pelanggarans
                     ]))
                     ->visible(fn($record) => $record->pelanggarans->count() > 0),
-                // Tables\Actions\Action::make('Detail')
-                //     ->label('Detail')
-                //     ->icon('heroicon-o-eye')
-                //     ->modalHeading('Detail Orang Tua')
-                //     ->modalSubheading('Informasi lengkap akun login orang tua siswa.')
-                //     ->modalContent(fn($record) => view('filament.siswa.modal-orangtua', [
-                //         'user' => $record->user
-                //     ]))
-                //     ->visible(fn($record) => $record->user_id !== null),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -174,7 +164,6 @@ class SiswaResource extends Resource
             RelationManagers\PelanggaranRelationManager::class,
         ];
     }
-
 
     public static function getPages(): array
     {

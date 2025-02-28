@@ -20,7 +20,6 @@ class siswa extends Model
         'user_id',
         'nis',
         'nama',
-        'kelas',
         'alamat',
         'tanggal_lahir',
     ];
@@ -33,5 +32,10 @@ class siswa extends Model
     public function pelanggarans()
     {
         return $this->belongsToMany(Pelanggaran::class, 'pelanggaran_siswa');
+    }
+
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'siswaId');
     }
 }

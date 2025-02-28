@@ -25,9 +25,18 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->brandName('Filament Demo')
             ->id('admin')
             ->path('admin')
             ->login()
+            ->spa()
+            ->brandName('Sistem Informasi Sekolah') // Ubah teks header
+            ->favicon(asset('favicon.ico'))
+            ->branding(fn ($branding) => $branding
+                ->title('Sistem Informasi Sekolah') // Ubah judul
+                ->favicon(asset('favicon.ico')) // Ubah favicon jika perlu
+            )
+            // ->topNavigation()
             ->plugins([
                 Blog::make()
             ])

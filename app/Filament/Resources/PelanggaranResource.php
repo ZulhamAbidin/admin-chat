@@ -17,17 +17,12 @@ class PelanggaranResource extends Resource
 {
     protected static ?string $model = Pelanggaran::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
-    protected static ?string $navigationGroup = 'Manajemen Sekolah';
-    protected static ?string $modelLabel = 'Pelanggaran Siswa';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('siswa_id')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\TextInput::make('jenis')
                     ->required()
                     ->maxLength(255),
@@ -42,14 +37,19 @@ class PelanggaranResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('siswa_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('jenis')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

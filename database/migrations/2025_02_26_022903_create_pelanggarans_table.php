@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('pelanggaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('siswa_id')->constrained('siswa')->onDelete('cascade');
             $table->string('jenis');
             $table->text('deskripsi')->nullable();
-            // $table->integer('poin')->default(0);
             $table->timestamp('tanggal')->useCurrent();
-        });
+            $table->timestamps();
+        });        
     }
 
     /**

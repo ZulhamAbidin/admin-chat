@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Orang_tua;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -33,5 +34,21 @@ class DatabaseSeeder extends Seeder
             'email' => 'orangtua2@gmail.com',
             'password' => Hash::make('123809'),
         ]);
+
+        // Seeder User
+        User::create([
+            'name' => 'Budi Santoso',
+            'email' => 'budi@contoh.com',
+            'password' => bcrypt('password'),
+            'role' => 'ortu'
+        ]);
+
+        // Seeder Orang Tua
+        // Orang_tua::create([
+        //     'user_id' => 1,
+        //     'nama' => 'Budi Santoso',
+        //     'telepon' => '08123456789'
+        // ]);
+
     }
 }

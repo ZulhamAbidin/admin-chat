@@ -17,86 +17,107 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-key';
-    protected static ?string $navigationGroup = 'Manajemen Sekolah';
-    protected static ?string $modelLabel = 'Pengguna';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('role')
-                    ->required(),
-                Forms\Components\TextInput::make('profile_photo_path')
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('active_status')
-                    ->required(),
-                Forms\Components\TextInput::make('avatar')
-                    ->required()
-                    ->maxLength(255)
-                    ->default('avatar.png'),
-                Forms\Components\Toggle::make('dark_mode')
-                    ->required(),
-                Forms\Components\TextInput::make('messenger_color')
-                    ->maxLength(255),
-            ]);
+        ->schema([
+            Forms\Components\TextInput::make('name')
+                ->label('Nama')
+                ->required()
+                ->maxLength(255),
+
+            Forms\Components\TextInput::make('telepon')
+                ->label('Nomor Telepon')
+                ->tel()
+                ->maxLength(15)
+                ->nullable(),
+
+            Forms\Components\TextInput::make('email')
+                ->label('Email')
+                ->email()
+                ->unique('users', 'email', ignoreRecord: true)
+                ->required(),
+
+            Forms\Components\TextInput::make('password')
+                ->label('Password')
+                ->password()
+                ->required(fn ($record) => $record === null)
+                ->maxLength(255)
+                ->dehydrateStateUsing(fn ($state) => !empty($state) ? bcrypt($state) : null)
+                ->dehydrated(fn ($state) => !empty($state)),
+
+            Forms\Components\Select::make('role')
+                ->label('Peran')
+                ->options([
+                    'admin' => 'Admin',
+                    'guru' => 'Guru',
+                    'ortu' => 'Orang Tua',
+                ])
+                ->required(),
+        ]);
     }
 
     public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('role'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('profile_photo_path')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('active_status')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('avatar')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('dark_mode')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('messenger_color')
-                    ->searchable(),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+{
+    return $table
+        ->columns([
+            Tables\Columns\TextColumn::make('name')
+                ->label('Nama')
+                ->sortable()
+                ->searchable(),
+
+            Tables\Columns\TextColumn::make('telepon')
+                ->label('Nomor Telepon')
+                ->sortable()
+                ->searchable(),
+
+            Tables\Columns\TextColumn::make('email')
+                ->label('Email')
+                ->sortable()
+                ->searchable(),
+
+            Tables\Columns\TextColumn::make('role')
+                ->label('Peran')
+                ->sortable()
+                ->badge()
+                ->colors([
+                    'admin' => 'danger',
+                    'guru' => 'info',
+                    'ortu' => 'success',
                 ]),
-            ]);
-    }
+
+            Tables\Columns\TextColumn::make('email_verified_at')
+                ->label('Verifikasi Email')
+                ->dateTime('d M Y H:i')
+                ->sortable()
+                ->placeholder('-'),
+
+            Tables\Columns\TextColumn::make('created_at')
+                ->label('Dibuat Pada')
+                ->dateTime('d M Y H:i')
+                ->sortable(),
+        ])
+        ->filters([
+            Tables\Filters\SelectFilter::make('role')
+                ->label('Filter Peran')
+                ->options([
+                    'admin' => 'Admin',
+                    'guru' => 'Guru',
+                    'ortu' => 'Orang Tua',
+                ]),
+        ])
+        ->actions([
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]),
+        ]);
+}
 
     public static function getRelations(): array
     {

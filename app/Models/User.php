@@ -25,6 +25,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'telepon',
+        'role',
         'email',
         'password',
     ];
@@ -52,12 +54,17 @@ class User extends Authenticatable
         ];
     }
 
-    // Relasi ke Siswa (Satu User bisa jadi Siswa)
-    public function siswa() {
+    // Relasi:
+    //     Memiliki satu orang tua (wajib).
+    //     Tidak terhubung langsung dengan siswa.
+    // public function orangTua() {
+    //     return $this->hasOne(Orang_tua::class, 'user_id');
+    // }
+    
+
+    public function siswa()
+    {
         return $this->hasOne(Siswa::class, 'user_id');
     }
-
-    public function orangTua() {
-        return $this->hasOne(Orang_tua::class, 'user_id');
-    }
+    
 }

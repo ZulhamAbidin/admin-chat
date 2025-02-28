@@ -16,9 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-user';
-    protected static ?string $navigationGroup = 'Manajemen Pengguna';
+    protected static ?string $navigationIcon = 'heroicon-o-lock-open';
+    // protected static ?string $navigationGroup = 'Manajemen Pengguna';
+    protected static ?string $navigationGroup = 'Data Sekolah';
 
     public static function form(Form $form): Form
     {
@@ -67,17 +67,20 @@ class UserResource extends Resource
             Tables\Columns\TextColumn::make('name')
                 ->label('Nama')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault:false),
 
             Tables\Columns\TextColumn::make('telepon')
                 ->label('Nomor Telepon')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault:true),
 
             Tables\Columns\TextColumn::make('email')
                 ->label('Email')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault:false),
 
             Tables\Columns\TextColumn::make('role')
                 ->label('Peran')
@@ -87,18 +90,21 @@ class UserResource extends Resource
                     'admin' => 'danger',
                     'guru' => 'info',
                     'ortu' => 'success',
-                ]),
+                ])
+                ->toggleable(isToggledHiddenByDefault:false),
 
             Tables\Columns\TextColumn::make('email_verified_at')
                 ->label('Verifikasi Email')
                 ->dateTime('d M Y H:i')
                 ->sortable()
-                ->placeholder('-'),
+                ->placeholder('-')
+                ->toggleable(isToggledHiddenByDefault:true),
 
             Tables\Columns\TextColumn::make('created_at')
                 ->label('Dibuat Pada')
                 ->dateTime('d M Y H:i')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault:false),
         ])
         ->filters([
             Tables\Filters\SelectFilter::make('role')
@@ -108,14 +114,19 @@ class UserResource extends Resource
                     'guru' => 'Guru',
                     'ortu' => 'Orang Tua',
                 ]),
+                
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),
+            Tables\Actions\ForceDeleteAction::make(),
+            Tables\Actions\RestoreAction::make(),
         ])
         ->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
             ]),
         ]);
 }

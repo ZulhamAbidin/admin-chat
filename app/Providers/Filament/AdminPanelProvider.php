@@ -6,6 +6,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
+use Filament\Enums\ThemeMode;
 use Firefly\FilamentBlog\Blog;
 use Filament\Support\Colors\Color;
 use Filament\Http\Middleware\Authenticate;
@@ -24,19 +25,18 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            // ->topNavigation()
+            // ->brandLogo(asset('lineone/images/favicon.png'))
             ->default()
-            ->brandName('Filament Demo')
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarFullyCollapsibleOnDesktop()
+            ->brandName('SMK Negeri 7 Makassar')
+            ->favicon(asset('lineone/images/logo.webp'))
             ->id('admin')
             ->path('admin')
             ->login()
             ->spa()
-            ->brandName('Sistem Informasi Sekolah') // Ubah teks header
-            ->favicon(asset('favicon.ico'))
-            ->branding(fn ($branding) => $branding
-                ->title('Sistem Informasi Sekolah') // Ubah judul
-                ->favicon(asset('favicon.ico')) // Ubah favicon jika perlu
-            )
-            // ->topNavigation()
+            ->defaultThemeMode(ThemeMode::Light)
             ->plugins([
                 Blog::make()
             ])

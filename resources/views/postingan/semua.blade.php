@@ -1,16 +1,9 @@
 <x-app-layout>
-
-    {{-- Slider --}}
-    <div class="bg-white dark:bg-navy-600 dark:text-primary p-6 rounded-xl">
-        @include('komponen.slider')
-    </div>
-
-    {{-- Postingan Terbaru --}}
-    <div class="bg-white dark:bg-navy-600 dark:text-primary p-8 rounded-xl mt-10">
+    <div class="bg-white dark:bg-navy-600 dark:text-primary p-8 rounded-xl mt-2">
         <section id="postingan">
             <h1 class="text-2xl font-bold text-center mb-10">Postingan Terbaru</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach ($latestPosts as $post)
+                @foreach ($postingan as $post)
                 <div class="flex flex-col">
                     <img class="h-44 w-full rounded-2xl object-cover object-center" src="{{ asset('storage/' . $post->cover_photo_path) }}" alt="{{ $post->photo_alt_text }}">
                     <div class="card -mt-8 grow rounded-2xl p-4">
@@ -40,17 +33,12 @@
                 @endforeach
             </div>
         </section>
-        
-        <div class="flex justify-center mt-6">
+
+        {{-- <div class="flex justify-center mt-6">
             <a href="{{ route('postingan.semua') }}" class="btn bg-primary/10 font-medium text-primary hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-accent-light/10 dark:text-accent-light dark:hover:bg-accent-light/20 dark:focus:bg-accent-light/20 dark:active:bg-accent-light/25">
                 Lihat Semua Postingan
             </a>
-        </div>
-        
+        </div> --}}
     </div>
-
-    {{-- Pimpinan --}}
-
-
 
 </x-app-layout>

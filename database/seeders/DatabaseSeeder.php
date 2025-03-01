@@ -35,20 +35,14 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123809'),
         ]);
 
-        // Seeder User
-        User::create([
-            'name' => 'Budi Santoso',
-            'email' => 'budi@contoh.com',
-            'password' => bcrypt('password'),
-            'role' => 'ortu'
+        $this->call([
+            FilamentBlogSeeder::class, // Seeder untuk blog
         ]);
 
-        // Seeder Orang Tua
-        // Orang_tua::create([
-        //     'user_id' => 1,
-        //     'nama' => 'Budi Santoso',
-        //     'telepon' => '08123456789'
-        // ]);
+        $this->call([
+            JumbotronSeeder::class,
+        ]);
+        
 
     }
 }

@@ -18,7 +18,7 @@ class JumbotronResource extends Resource
 {
     protected static ?string $model = Jumbotron::class;
     protected static ?string $navigationIcon = 'heroicon-o-photo';
-    protected static ?string $navigationLabel = 'Jumbotron';
+    protected static ?string $navigationLabel = 'Slider';
 
     public static function form(Forms\Form $form): Forms\Form
     {

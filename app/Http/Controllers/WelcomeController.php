@@ -11,8 +11,6 @@ class WelcomeController extends Controller
     public function index()
     {
         $tableName = Config::get('filamentblog.tables.prefix') . 'posts';
-
-        // Ambil 4 postingan terbaru yang berstatus 'published'
         $latestPosts = DB::table($tableName)
             ->where('status', 'published')
             ->whereNotNull('published_at')

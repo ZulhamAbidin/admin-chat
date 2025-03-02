@@ -1,13 +1,13 @@
 <x-app-layout>
 
-    {{-- Slider --}}
+    {{-- Slider Jumbotron --}}
     <div class="bg-white dark:bg-navy-600 dark:text-primary p-6 rounded-xl">
         @include('komponen.slider')
     </div>
 
     {{-- Postingan Terbaru --}}
     <div class="bg-white dark:bg-navy-600 dark:text-primary p-8 rounded-xl mt-10">
-        <section id="postingan">
+        <section id="postingan mx-4">
             <h1 class="text-2xl font-bold text-center mb-10">Postingan Terbaru</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach ($latestPosts as $post)
@@ -50,7 +50,14 @@
     </div>
 
     {{-- Pimpinan --}}
+    <div class="bg-white dark:bg-navy-600 dark:text-primary p-8 rounded-xl mt-10">
+        <section id="postingan mx-4">
 
+        </section>
+    </div>
+    
+    
 
-
+    {{-- Penyaluran Praktik Pengalaman Lapangan --}}
+    
 </x-app-layout>

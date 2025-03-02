@@ -7,6 +7,8 @@ use Firefly\FilamentBlog\Traits\HasBlog;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
 class User extends Authenticatable
 {
@@ -53,18 +55,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    // Relasi:
-    //     Memiliki satu orang tua (wajib).
-    //     Tidak terhubung langsung dengan siswa.
-    // public function orangTua() {
-    //     return $this->hasOne(Orang_tua::class, 'user_id');
-    // }
     
-
     public function siswa()
     {
         return $this->hasOne(Siswa::class, 'user_id');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return in_array($this->role, ['admin', 'guru']);
     }
     
 }

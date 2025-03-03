@@ -29,9 +29,9 @@ class KelasResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('namaKelas')
+                TextInput::make('nama')
                     ->label('Nama Kelas')
-                    ->placeholder('X Pengembangan Perangkat Lunak dan GIM : A')
+                    ->placeholder('X : A')
                     ->unique(ignoreRecord: true)
                     ->validationMessages([
                         'unique' => 'Kelas Telah Terdaftar.',

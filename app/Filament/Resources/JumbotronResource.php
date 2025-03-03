@@ -17,8 +17,9 @@ use Filament\Forms\Components\Grid;
 class JumbotronResource extends Resource
 {
     protected static ?string $model = Jumbotron::class;
-    protected static ?string $navigationIcon = 'heroicon-o-photo';
     protected static ?string $navigationLabel = 'Slider';
+    protected static ?string $navigationIcon = 'heroicon-o-photo';
+    protected static ?string $navigationGroup = 'Landing Page';
 
     public static function form(Forms\Form $form): Forms\Form
     {

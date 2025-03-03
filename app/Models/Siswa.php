@@ -22,7 +22,19 @@ class siswa extends Model
         'nama',
         'alamat',
         'tanggal_lahir',
+        'jurusan_id',
+        'kelas_id'
     ];
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class);
+    }
 
     public function user()
     {
@@ -34,8 +46,4 @@ class siswa extends Model
         return $this->belongsToMany(Pelanggaran::class, 'pelanggaran_siswa');
     }
 
-    public function kelas()
-    {
-        return $this->hasMany(Kelas::class, 'siswaId');
-    }
 }

@@ -24,6 +24,7 @@ use App\Filament\Resources\SiswaResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SiswaResource\RelationManagers;
 use App\Filament\Resources\PelanggaranResource\RelationManagers\SiswaResourceRelationManager;
+use App\Models\Jurusan;
 
 class SiswaResource extends Resource
 {
@@ -56,21 +57,29 @@ class SiswaResource extends Resource
                             ->maxLength(500)
                             ->columnSpanFull(),
 
-                        Select::make('idKelas')
+                        Select::make('kelas_id')
                             ->label('Nama Kelas')
                             ->placeholder('Pilih Nama Kelas')
-                            ->searchable()
                             ->helperText('Tambah Kelas jika belum tersedia.')
                             ->options(
-                                Kelas::all()->pluck('namaKelas', 'id')
+                                Kelas::all()->pluck('nama', 'id')
+                            ),
+
+                        Select::make('jurusan_id')
+                            ->label('Jurusan')
+                            ->placeholder('Pilih Jurusan')
+                            ->helperText('Tambah Jurusan jika belum tersedia.')
+                            ->options(
+                                Jurusan::all()->pluck('nama', 'id')
                             ),
 
                         DatePicker::make('tanggal_lahir')
                             ->label('Tanggal Lahir')
                             ->required(),
 
-                            Select::make('user_id')
+                        Select::make('user_id')
                             ->label('Tautkan Dengan Akun Orang Tua')
+                            ->helperText('Optional')
                             ->options(function ($record) {
                                 return \App\Models\User::where('role', 'ortu')
                                     ->where(function ($query) use ($record) {
@@ -99,40 +108,50 @@ class SiswaResource extends Resource
                 TextColumn::make('nis')
                     ->label('NIS')
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable(),
 
                 TextColumn::make('nama')
                     ->label('Nama Peserta Didik')
                     ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('kelas')
-                    ->label('Kelas')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable(),
                 
-                TextColumn::make('kelas.namaKelas')
+                TextColumn::make('kelas.nama')
                     ->label('Kelas')
                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
-                    ->placeholder('Belum Ditambahkan'),
+                    ->placeholder('Kelas Belum Ditambahkan'),
+
+                TextColumn::make('jurusan.nama')
+                    ->label('Jurusan')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable()
+                    ->placeholder('Jurusan Belum Ditambahkan'),
 
                 TextColumn::make('user.name')
                     ->label('Nama Orang Tua')
                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->searchable()
                     ->placeholder('Belum Ditambahkan'),
 
                 TextColumn::make('tanggal_lahir')
                     ->label('Tanggal Lahir')
                     ->date()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
                 TextColumn::make('alamat')
                     ->label('Alamat')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->limit(50),
 
                 TextColumn::make('pelanggarans_count')
                     ->label('Jumlah Pelanggaran')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->counts('pelanggarans')
                     ->sortable(),
             ])

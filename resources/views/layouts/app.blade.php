@@ -51,7 +51,9 @@
         </div>
 
         @include('filament.sisipkan.chat-bubble-guest')
-        
+
+        @livewireScripts
+
         <script>
         
             window.addEventListener("DOMContentLoaded", () => Alpine.start());

@@ -1,4 +1,77 @@
 <x-app-layout>
+    <style>
+
+        article ol {
+            list-style-type: decimal !important;
+            padding-left: 20px !important;
+        }
+
+        article ul {
+            list-style-type: disc !important;
+            padding-left: 20px !important;
+        }
+
+        /* Blog Posts */
+        article h1 {
+            line-height: 1.2 !important;
+            font-size: 2rem !important;
+            color: #424242 !important;
+            font-weight: 900 !important;
+            padding-bottom: 20px !important;
+        }
+
+        article h2 {
+            line-height: 1.2 !important;
+            font-size: 1.5rem !important;
+            color: #424242 !important;
+            font-weight: 800 !important;
+            padding-bottom: 10px !important;
+        }
+
+        article h3 {
+            line-height: 1.2 !important;
+            font-size: 1.25rem !important;
+            color: #424242 !important;
+            font-weight: 700 !important;
+            padding-bottom: 10px !important;
+        }
+
+        article h4 {
+            line-height: 1.2 !important;
+            font-size: 1.2rem !important;
+            color: #424242 !important;
+            font-weight: 600 !important;
+            padding-bottom: 10px !important;
+        }
+
+        article p {
+            line-height: 1.75 !important;
+            letter-spacing: .2px !important;
+            font-size: 1rem !important;
+            color: #424242 !important;
+            font-weight: 400 !important;
+            margin-bottom: 1rem !important;
+        }
+
+        article ul {
+            line-height: 1.7 !important;
+            padding-bottom: 5px !important;
+        }
+
+        article table {
+            margin-top: 2rem !important;
+            margin-bottom: 2rem !important;
+            border-radius: 10px !important;
+        }
+
+        article table,
+        article table td,
+        article table th {
+            border: 1px solid #ccc !important;
+            padding: 5px 10px !important;
+        }
+    </style>
+
     <div class="grid grid-cols-12 lg:gap-6">
         <div class="col-span-12 pt-6 lg:col-span-8 lg:pb-6">
             <div class="card p-4 lg:p-6">

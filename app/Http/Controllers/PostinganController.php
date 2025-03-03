@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Config;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostinganController extends Controller
 {
@@ -108,4 +109,87 @@ class PostinganController extends Controller
 
         return back()->with('success', 'Komentar Anda telah dikirim dan menunggu persetujuan.');
     }
+
+  
+
+public function indexByCategory($slug)
+{
+    // Ambil kategori berdasarkan slug
+    $category = DB::table(config('filamentblog.tables.prefix') . 'categories')
+        ->where('slug', $slug)
+        ->first();
+
+    if (!$category) {
+        abort(404, 'Kategori tidak ditemukan');
+    }
+
+    // Ambil postingan yang berstatus "published" dalam kategori ini
+    $posts = DB::table(config('filamentblog.tables.prefix') . 'posts')
+        ->join(
+            config('filamentblog.tables.prefix') . 'category_' . config('filamentblog.tables.prefix') . 'post',
+            config('filamentblog.tables.prefix') . 'posts.id',
+            '=',
+            config('filamentblog.tables.prefix') . 'category_' . config('filamentblog.tables.prefix') . 'post.post_id'
+        )
+        ->where(config('filamentblog.tables.prefix') . 'category_' . config('filamentblog.tables.prefix') . 'post.category_id', $category->id)
+        ->where(config('filamentblog.tables.prefix') . 'posts.status', 'published')
+        ->select(config('filamentblog.tables.prefix') . 'posts.*')
+        ->latest()
+        ->paginate(10);
+
+    // Konversi pagination ke array agar bisa dimodifikasi
+    $modifiedPosts = [];
+    foreach ($posts->items() as $post) {
+        $modifiedPosts[] = [
+            'id' => $post->id,
+            'title' => $post->title,
+            'slug' => $post->slug,
+            'sub_title' => $post->sub_title,
+            'cover_photo_path' => $post->cover_photo_path,
+            'formatted_date' => Carbon::parse($post->published_at)->format('d M Y'),
+            'tags' => [], // Tags akan ditambahkan di bawah
+        ];
+    }
+
+    // Ambil ID post untuk mendapatkan tags
+    $postIds = array_column($modifiedPosts, 'id');
+
+    // Ambil tags untuk semua post dalam satu query
+    $postTags = DB::table(config('filamentblog.tables.prefix') . 'tags')
+        ->join(
+            config('filamentblog.tables.prefix') . 'post_' . config('filamentblog.tables.prefix') . 'tag',
+            config('filamentblog.tables.prefix') . 'tags.id',
+            '=',
+            config('filamentblog.tables.prefix') . 'post_' . config('filamentblog.tables.prefix') . 'tag.tag_id'
+        )
+        ->whereIn(config('filamentblog.tables.prefix') . 'post_' . config('filamentblog.tables.prefix') . 'tag.post_id', $postIds)
+        ->select(
+            config('filamentblog.tables.prefix') . 'post_' . config('filamentblog.tables.prefix') . 'tag.post_id',
+            config('filamentblog.tables.prefix') . 'tags.name'
+        )
+        ->get();
+
+    // Kelompokkan tags berdasarkan post_id
+    $tagsByPost = [];
+    foreach ($postTags as $tag) {
+        $tagsByPost[$tag->post_id][] = $tag->name;
+    }
+
+    // Tambahkan tags ke setiap post
+    foreach ($modifiedPosts as &$post) {
+        $post['tags'] = $tagsByPost[$post['id']] ?? [];
+    }
+
+    // Buat ulang paginator dengan data yang telah dimodifikasi
+    $posts = new LengthAwarePaginator(
+        $modifiedPosts,
+        $posts->total(),
+        $posts->perPage(),
+        $posts->currentPage(),
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+    return view('postingan.kategori', compact('category', 'posts'));
+}
+
 }

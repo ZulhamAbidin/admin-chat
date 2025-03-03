@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateJumbotron extends CreateRecord
 {
     protected static string $resource = JumbotronResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

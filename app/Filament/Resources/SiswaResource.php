@@ -7,24 +7,27 @@ use App\Models\User;
 use Filament\Tables;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\Jurusan;
 use Filament\Forms\Form;
 use App\Models\Orang_tua;
 use Filament\Tables\Table;
+use App\Models\Pelanggaran;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\BadgeColumn;
 use App\Filament\Resources\KelasResource;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\CheckboxList;
 use App\Filament\Resources\SiswaResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SiswaResource\RelationManagers;
 use App\Filament\Resources\PelanggaranResource\RelationManagers\SiswaResourceRelationManager;
-use App\Models\Jurusan;
 
 class SiswaResource extends Resource
 {
@@ -84,12 +87,12 @@ class SiswaResource extends Resource
                                 return \App\Models\User::where('role', 'ortu')
                                     ->where(function ($query) use ($record) {
                                         $query->whereDoesntHave('siswa')
-                                              ->orWhere('id', $record?->user_id);
+                                            ->orWhere('id', $record?->user_id);
                                     })
                                     ->pluck('name', 'id');
                             })
                             ->searchable()
-                            ->preload(),                        
+                            ->preload(),
 
                         Forms\Components\Select::make('pelanggarans')
                             ->label('Pelanggaran')
@@ -116,7 +119,7 @@ class SiswaResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable(),
-                
+
                 TextColumn::make('kelas.nama')
                     ->label('Kelas')
                     ->sortable()
@@ -153,22 +156,48 @@ class SiswaResource extends Resource
                     ->label('Jumlah Pelanggaran')
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->counts('pelanggarans')
-                    ->sortable(),
+                    ->sortable()
             ])
             ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('kelolaPelanggaran')
+                    ->label('Kelola Pelanggaran')
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->form(fn(Siswa $record) => [
+                        CheckboxList::make('pelanggarans')
+                            ->label('Pilih Pelanggaran')
+                            ->options(Pelanggaran::query()->pluck('jenis', 'id')->toArray())
+                            ->default(fn() => $record->pelanggarans()->pluck('pelanggaran.id')->toArray())
+                            ->columns(2),
+                    ])
+                    ->action(function (array $data, Siswa $record) {
+                        if (isset($data['pelanggarans'])) {
+                            $record->pelanggarans()->sync($data['pelanggarans']);
+                        } else {
+                            $record->pelanggarans()->detach();
+                        }
+
+                        Notification::make()
+                            ->title('Berhasil!')
+                            ->body('Data pelanggaran telah diperbarui.')
+                            ->success()
+                            ->send();
+                    })
+                    ->modalHeading('Kelola Pelanggaran')
+                    ->modalButton('Simpan')
+                    ->color('warning'),
                 Tables\Actions\Action::make('lihat_pelanggaran')
-                    ->label('Lihat Pelanggaran')
+                    ->label('Detail')
                     ->icon('heroicon-o-eye')
                     ->modalHeading('Detail Pelanggaran Siswa')
                     ->modalContent(fn($record) => view('filament.siswa.modal-pelanggaran', [
                         'pelanggarans' => $record->pelanggarans
                     ]))
-                    ->visible(fn($record) => $record->pelanggarans->count() > 0),
+                    ->visible(fn($record) => $record->pelanggarans->count() > 0)
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

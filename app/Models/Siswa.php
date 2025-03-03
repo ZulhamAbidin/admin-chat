@@ -41,9 +41,13 @@ class siswa extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // public function pelanggarans()
+    // {
+    //     return $this->belongsToMany(Pelanggaran::class, 'pelanggaran_siswa');
+    // }
+
     public function pelanggarans()
     {
-        return $this->belongsToMany(Pelanggaran::class, 'pelanggaran_siswa');
+        return $this->belongsToMany(Pelanggaran::class, 'pelanggaran_siswa', 'siswa_id', 'pelanggaran_id');
     }
-
 }

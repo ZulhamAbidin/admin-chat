@@ -42,7 +42,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             JumbotronSeeder::class,
         ]);
-        
+
+        $this->call([
+            PelanggaranSeeder::class,
+        ]);
 
     }
 }

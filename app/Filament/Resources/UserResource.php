@@ -13,12 +13,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-lock-open';
-    // protected static ?string $navigationGroup = 'Manajemen Pengguna';
     protected static ?string $navigationGroup = 'Data Sekolah';
+    
 
     public static function form(Form $form): Form
     {

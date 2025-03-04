@@ -14,10 +14,13 @@ Route::get('/postingan/semua', [PostinganController::class, 'semua'])->name('pos
 Route::get('/postingan/{slug}', [PostinganController::class, 'show'])->name('postingan.show');
 Route::post('/komentar/store', [PostinganController::class, 'store'])->name('komentar.store');
 Route::get('/kategori/{slug}', [PostinganController::class, 'indexByCategory'])->name('kategori.postingan');
+Route::get('/jurusan', [WelcomeController::class, 'jurusan'])->name('jurusan.index');
+Route::get('/guru', [WelcomeController::class, 'guru'])->name('guru.index');
+Route::get('/siswa', [WelcomeController::class, 'siswa'])->name('siswa.index');
 
 Route::post('/logout', function (Request $request) {
-    Auth::logout(); // Logout pengguna
-    $request->session()->invalidate(); // Hapus sesi
-    $request->session()->regenerateToken(); // Regenerasi token CSRF
-    return redirect('/'); // Redirect ke halaman utama
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
 })->name('logout');

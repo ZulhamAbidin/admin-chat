@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                RedirectIfNotFilamentAdmin::class, // Pastikan middleware ini ada!
+                RedirectIfNotFilamentAdmin::class,
             ], isPersistent: true);
     }
 }

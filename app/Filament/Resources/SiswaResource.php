@@ -37,7 +37,7 @@ class SiswaResource extends Resource
     protected static ?string $model = Siswa::class;
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
     protected static ?string $navigationGroup = 'Data Sekolah';
-
+    
     public static function form(Form $form): Form
     {
         return $form
@@ -153,13 +153,6 @@ class SiswaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->counts('pelanggaran')
                     ->sortable()
-
-                // TextColumn::make('pelanggaran')
-                //     ->label('Daftar Pelanggaran')
-                //     ->formatStateUsing(function ($state, $record) {
-                //         return $record->pelanggaran->pluck('jenis')->implode(', ');
-                //     })
-
             ])
             ->filters([])
             ->actions([
@@ -200,11 +193,9 @@ class SiswaResource extends Resource
                         'user'        => $record->user,
                         'pelanggaran' => $record->pelanggaran,
                     ]))
-                    // Di sini kita menambahkan array modalActions agar tidak hanya tombol "Tutup"
                     ->modalActions([
-                        // Tombol Kirim ke WhatsApp
                         Action::make('kirim_wa')
-                            ->label('Kirim ke WA')
+                            ->label('Kirim ke Whatsapp Orang Tua')
                             ->icon('heroicon-o-chat-bubble-oval-left-ellipsis')
                             ->url(fn (Siswa $record) => "https://wa.me/{$record->user?->telepon}?text=" . urlencode(
                                 "Assalamualaikum Bapak/Ibu {$record->user->name}, kami dari SMKN 7 Makassar ingin menyampaikan pelanggaran yang dilakukan oleh {$record->nama} sebagai berikut:\n\n" .

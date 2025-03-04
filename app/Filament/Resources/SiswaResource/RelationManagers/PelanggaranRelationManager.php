@@ -11,7 +11,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 
 class PelanggaranRelationManager extends RelationManager
 {
-    protected static string $relationship = 'pelanggarans'; // Sesuai dengan relasi di model Siswa.php
+    protected static string $relationship = 'pelanggaran'; // Sesuai dengan relasi di model Siswa.php
 
     public function form(Form $form): Form
     {
@@ -19,7 +19,7 @@ class PelanggaranRelationManager extends RelationManager
         ->schema([
             Forms\Components\Select::make('pelanggaran_id')
                 ->label('Jenis Pelanggaran')
-                ->relationship('pelanggarans', 'jenis')
+                ->relationship('pelanggaran', 'jenis')
                 ->preload()
                 ->searchable()
                 ->required()

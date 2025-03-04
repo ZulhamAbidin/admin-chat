@@ -72,6 +72,7 @@ class UserResource extends Resource
 
             Tables\Columns\TextColumn::make('telepon')
                 ->label('Nomor Telepon')
+                ->placeholder('62xxxxxxxxxx')
                 ->sortable()
                 ->searchable()
                 ->toggleable(isToggledHiddenByDefault:true),

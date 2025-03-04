@@ -44,7 +44,7 @@ class KelasResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('namaKelas')
+                TextColumn::make('nama')
                 ->label('Nama Kelas')
                 ->searchable()
                 ->copyable()

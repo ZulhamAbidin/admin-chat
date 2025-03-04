@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
@@ -13,9 +14,11 @@ use App\Models\Orang_tua;
 use Filament\Tables\Table;
 use App\Models\Pelanggaran;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -93,13 +96,6 @@ class SiswaResource extends Resource
                             })
                             ->searchable()
                             ->preload(),
-
-                        Forms\Components\Select::make('pelanggarans')
-                            ->label('Pelanggaran')
-                            ->multiple()
-                            ->relationship('pelanggarans', 'jenis')
-                            ->preload()
-                            ->searchable(),
                     ]),
             ]);
     }
@@ -152,14 +148,20 @@ class SiswaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->limit(50),
 
-                TextColumn::make('pelanggarans_count')
-                    ->label('Jumlah Pelanggaran')
+                TextColumn::make('pelanggaran_count')
+                    ->label('Pelanggaran')
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->counts('pelanggarans')
+                    ->counts('pelanggaran')
                     ->sortable()
+
+                // TextColumn::make('pelanggaran')
+                //     ->label('Daftar Pelanggaran')
+                //     ->formatStateUsing(function ($state, $record) {
+                //         return $record->pelanggaran->pluck('jenis')->implode(', ');
+                //     })
+
             ])
-            ->filters([
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -167,17 +169,17 @@ class SiswaResource extends Resource
                     ->label('Kelola Pelanggaran')
                     ->icon('heroicon-o-exclamation-triangle')
                     ->form(fn(Siswa $record) => [
-                        CheckboxList::make('pelanggarans')
+                        CheckboxList::make('pelanggaran')
                             ->label('Pilih Pelanggaran')
                             ->options(Pelanggaran::query()->pluck('jenis', 'id')->toArray())
-                            ->default(fn() => $record->pelanggarans()->pluck('pelanggaran.id')->toArray())
+                            ->default(fn() => $record->pelanggaran()->pluck('pelanggaran.id')->toArray())
                             ->columns(2),
                     ])
                     ->action(function (array $data, Siswa $record) {
-                        if (isset($data['pelanggarans'])) {
-                            $record->pelanggarans()->sync($data['pelanggarans']);
+                        if (isset($data['pelanggaran'])) {
+                            $record->pelanggaran()->sync($data['pelanggaran']);
                         } else {
-                            $record->pelanggarans()->detach();
+                            $record->pelanggaran()->detach();
                         }
 
                         Notification::make()
@@ -189,15 +191,34 @@ class SiswaResource extends Resource
                     ->modalHeading('Kelola Pelanggaran')
                     ->modalButton('Simpan')
                     ->color('warning'),
-                Tables\Actions\Action::make('lihat_pelanggaran')
+
+                Action::make('lihat_detail')
                     ->label('Detail')
                     ->icon('heroicon-o-eye')
-                    ->modalHeading('Detail Pelanggaran Siswa')
-                    ->modalContent(fn($record) => view('filament.siswa.modal-pelanggaran', [
-                        'pelanggarans' => $record->pelanggarans
+                    ->modalHeading('Detail Siswa & Pelanggaran')
+                    ->modalContent(fn (Siswa $record) => view('filament.siswa.modal-pelanggaran', [
+                        'user'        => $record->user,
+                        'pelanggaran' => $record->pelanggaran,
                     ]))
-                    ->visible(fn($record) => $record->pelanggarans->count() > 0)
-
+                    // Di sini kita menambahkan array modalActions agar tidak hanya tombol "Tutup"
+                    ->modalActions([
+                        // Tombol Kirim ke WhatsApp
+                        Action::make('kirim_wa')
+                            ->label('Kirim ke WA')
+                            ->icon('heroicon-o-chat-bubble-oval-left-ellipsis')
+                            ->url(fn (Siswa $record) => "https://wa.me/{$record->user?->telepon}?text=" . urlencode(
+                                "Assalamualaikum Bapak/Ibu {$record->user->name}, kami dari SMKN 7 Makassar ingin menyampaikan pelanggaran yang dilakukan oleh {$record->nama} sebagai berikut:\n\n" .
+                                $record->pelanggaran->map(function ($pelanggaran, $index) {
+                                    return ($index + 1) . ". {$pelanggaran->jenis} pada tanggal " . Carbon::parse($pelanggaran->tanggal)->format('d M Y');
+                                })->implode("\n")
+                            ))
+                            ->openUrlInNewTab()
+                            ->visible(fn (Siswa $record) => $record->user && $record->user->telepon),
+                        Action::make('close')
+                            ->label('Tutup')
+                            ->close(),
+                    ])
+                    ->visible(fn (Siswa $record) => $record->user || $record->pelanggaran->count() > 0)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

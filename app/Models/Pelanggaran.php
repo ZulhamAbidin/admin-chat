@@ -18,9 +18,9 @@ class pelanggaran extends Model
         'deskripsi',
         'tanggal',
     ];
-    protected $casts = [
-        'tanggal' => 'datetime', // Pastikan tanggal otomatis di-cast ke datetime
-    ];
+    // protected $casts = [
+    //     'tanggal' => 'datetime',
+    // ];
 
     public function siswa()
     {

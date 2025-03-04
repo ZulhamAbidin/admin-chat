@@ -85,8 +85,8 @@
                             <span class="text-4xl tracking-tight text-primary dark:text-accent-light counter" data-target="{{ $totalGuru }}">0</span>
                         </div>
                         <div class="mt-8">
-                            <a href="" class="btn rounded-full border border-slate-200 font-medium text-primary hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-500 dark:text-accent-light dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
-                                {{ route('guru.index') }}
+                            <a href="{{ route('guru.index') }}" class="btn rounded-full border border-slate-200 font-medium text-primary hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-500 dark:text-accent-light dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                               Lihat Detail
                             </a>
                         </div>
                     </div>

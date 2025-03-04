@@ -88,6 +88,7 @@
 
     </script>
 
+    @stack('scripts')
     <script>
         window.addEventListener("DOMContentLoaded", () => Alpine.start());
 

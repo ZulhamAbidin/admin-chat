@@ -7,8 +7,10 @@ use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Jurusan;
 use App\Models\Pimpinan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
+use Yajra\DataTables\Facades\DataTables;
 
 class WelcomeController extends Controller
 {
@@ -19,7 +21,7 @@ class WelcomeController extends Controller
         $totalSiswa = Siswa::count();
         $totalGuru = Guru::count();
         $totalJurusan = Jurusan::count();
-        
+
         $latestPosts = DB::table($tableName)
             ->where('status', 'published')
             ->whereNotNull('published_at')
@@ -37,12 +39,13 @@ class WelcomeController extends Controller
     public function jurusan()
     {
         $jurusan = Jurusan::all();
-        return view('lainya.jurusan', compact('jurusan'));
+        return view('lainnya.jurusan', compact('jurusan'));
     }
 
     public function guru()
     {
         $guru = Guru::all();
-        return view('lainya.guru', compact('guru'));
+        return view('lainnya.guru', compact('guru'));
     }
+
 }

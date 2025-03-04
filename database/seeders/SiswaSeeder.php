@@ -10,6 +10,26 @@ class SiswaSeeder extends Seeder
 {
     public function run()
     {
+        $jumlahSiswa = 500;
+
+        $data = [];
+
+        for ($i = 1; $i <= $jumlahSiswa; $i++) {
+            $data[] = [
+                'user_id' => rand(1, 3),
+                'nis' => '1929042120' . str_pad($i, 2, '0', STR_PAD_LEFT),
+                'nama' => fake()->name(),
+                'alamat' => fake()->address(),
+                'tanggal_lahir' => \Carbon\Carbon::now()->subYears(rand(10, 20))->format('Y-m-d'),
+                'jurusan_id' => rand(1, 4),
+                'kelas_id' => rand(1, 3),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        DB::table('siswa')->insert($data);
+
         DB::table('siswa')->insert([
             [
                 'user_id' => 3,

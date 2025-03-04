@@ -4,6 +4,7 @@ use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PostinganController;
+use App\Http\Controllers\SiswaController;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Facades\FilamentAdmin;
 use Illuminate\Http\Request;
@@ -16,7 +17,10 @@ Route::post('/komentar/store', [PostinganController::class, 'store'])->name('kom
 Route::get('/kategori/{slug}', [PostinganController::class, 'indexByCategory'])->name('kategori.postingan');
 Route::get('/jurusan', [WelcomeController::class, 'jurusan'])->name('jurusan.index');
 Route::get('/guru', [WelcomeController::class, 'guru'])->name('guru.index');
-Route::get('/siswa', [WelcomeController::class, 'siswa'])->name('siswa.index');
+
+Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+Route::get('/siswa/data', [SiswaController::class, 'data'])->name('siswa.data');
+
 
 Route::post('/logout', function (Request $request) {
     Auth::logout();

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Database\Seeders\KontakSeeder;
 use Illuminate\Support\Facades\Hash;
 use Database\Seeders\FblogCategoryFblogPostSeeder;
 
@@ -11,7 +12,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-
         User::create([
             'name' => 'Super User',
             'email' => 'zlhm378@gmail.com',
@@ -72,7 +72,9 @@ class DatabaseSeeder extends Seeder
             PelanggaranSiswaSeeder::class,
             JumbotronSeeder::class,
             GuruSeeder::class,
-            PimpinanSeeder::class
+            PimpinanSeeder::class,
+            MitraSeeder::class,
+            KontakSeeder::class,
         ]);
     }
 }

@@ -15,7 +15,7 @@ class PimpinanSeeder extends Seeder
                 'id' => 1,
                 'nama' => 'Drs. H. Suparman, M.Pd.',
                 'jabatan' => 'Kepala Sekolah',
-                'foto' => null,
+                'foto' => 'pimpinan/01JNH1AAZPZ1AB1WJ8BVTG0290.jpeg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

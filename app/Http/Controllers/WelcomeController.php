@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Jurusan;
+use App\Models\Kontak;
+use App\Models\Mitra;
 use App\Models\Pimpinan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +21,9 @@ class WelcomeController extends Controller
         $pimpinan = Pimpinan::all();
         $tableName = Config::get('filamentblog.tables.prefix') . 'posts';
         $totalSiswa = Siswa::count();
+        $totalmitra = Mitra::count();
         $totalGuru = Guru::count();
         $totalJurusan = Jurusan::count();
-
         $latestPosts = DB::table($tableName)
             ->where('status', 'published')
             ->whereNotNull('published_at')
@@ -32,8 +34,7 @@ class WelcomeController extends Controller
                 $post->formatted_date = Carbon::parse($post->published_at)->format('d M Y');
                 return $post;
             });
-
-        return view('welcome', compact('latestPosts', 'pimpinan', 'totalSiswa', 'totalGuru', 'totalJurusan'));
+        return view('welcome', compact('latestPosts', 'pimpinan', 'totalSiswa', 'totalGuru', 'totalJurusan', 'totalmitra'));
     }
 
     public function jurusan()
@@ -48,4 +49,9 @@ class WelcomeController extends Controller
         return view('lainnya.guru', compact('guru'));
     }
 
+    public function mitra()
+    {
+        $mitra = Mitra::all();
+        return view('lainnya.mitra', compact('mitra'));
+    }
 }

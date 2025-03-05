@@ -25,17 +25,7 @@ class siswa extends Model
         'jurusan_id',
         'kelas_id'
     ];
-
-    // public function jurusan()
-    // {
-    //     return $this->belongsTo(Jurusan::class);
-    // }
-
-    // public function kelas()
-    // {
-    //     return $this->belongsTo(Kelas::class);
-    // }
-
+    
     public function jurusan()
     {
         return $this->belongsTo(Jurusan::class, 'jurusan_id');

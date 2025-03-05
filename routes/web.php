@@ -17,6 +17,7 @@ Route::post('/komentar/store', [PostinganController::class, 'store'])->name('kom
 Route::get('/kategori/{slug}', [PostinganController::class, 'indexByCategory'])->name('kategori.postingan');
 Route::get('/jurusan', [WelcomeController::class, 'jurusan'])->name('jurusan.index');
 Route::get('/guru', [WelcomeController::class, 'guru'])->name('guru.index');
+Route::get('/mitra', [WelcomeController::class, 'mitra'])->name('mitra.index');
 
 Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
 Route::get('/siswa/data', [SiswaController::class, 'data'])->name('siswa.data');

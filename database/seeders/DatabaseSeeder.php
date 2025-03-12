@@ -74,7 +74,6 @@ class DatabaseSeeder extends Seeder
             GuruSeeder::class,
             PimpinanSeeder::class,
             MitraSeeder::class,
-            KontakSeeder::class,
         ]);
     }
 }

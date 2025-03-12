@@ -8,8 +8,9 @@
 </p>
 
 ## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+public/build/manifest.json              0.27 kB │ gzip:  0.15 kB
+public/build/assets/app-BN7FBCOc.css   30.97 kB │ gzip:  6.19 kB
+public/build/assets/app-Ct2ZDoyr.js   115.11 kB │ gzip: 36.29 kB
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).

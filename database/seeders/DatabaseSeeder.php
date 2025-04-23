@@ -3,35 +3,77 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\KontakSeeder;
 use Illuminate\Support\Facades\Hash;
+use Database\Seeders\FblogCategoryFblogPostSeeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::create([
-            'name' => 'Admin User',
+            'name' => 'Super User',
             'email' => 'zlhm378@gmail.com',
+            'telepon' => '6281527501731',
             'password' => Hash::make('123809'),
         ]);
 
         User::create([
-            'name' => 'orangtua siswa',
-            'email' => 'orangtua@gmail.com',
+            'name' => 'Admin SMKN 7 Makassar',
+            'email' => 'smkn7makassar@gmail.com',
+            'telepon' => '6281527501731',
             'password' => Hash::make('123809'),
         ]);
 
         User::create([
-            'name' => 'orangtua 2 siswa',
-            'email' => 'orangtua2@gmail.com',
+            'name' => 'Slamet Prasetyo',
+            'email' => 'slamet.prasetyo@email.com',
+            'telepon' => '6281527501731',
             'password' => Hash::make('123809'),
+            'role' => 'ortu',
+        ]);
+
+        User::create([
+            'name' => 'Hasan Basri',
+            'email' => 'hasan.basri@email.com',
+            'telepon' => '6281527501731',
+            'password' => Hash::make('123809'),
+            'role' => 'ortu',
+        ]);
+
+        User::create([
+            'name' => 'joko.santoso',
+            'email' => 'joko.santoso@email.com',
+            'telepon' => '6281527501731',
+            'password' => Hash::make('123809'),
+            'role' => 'ortu',
+        ]);
+
+        User::create([
+            'name' => 'Bambang Wijaya',
+            'email' => 'bambang.wijaya@email.com',
+            'telepon' => '6281527501731',
+            'password' => Hash::make('123809'),
+            'role' => 'ortu',
+        ]);
+
+        $this->call([
+            FblogCategoriesSeeder::class,
+            FblogTagsSeeder::class,
+            FblogPostsSeeder::class,
+            FblogCategoryFblogPostSeeder::class,
+            FblogPostFblogTagSeeder::class,
+            FblogSeoDetailsSeeder::class,
+            JurusanSeeder::class,
+            KelasSeeder::class,
+            SiswaSeeder::class,
+            PelanggaranSeeder::class,
+            PelanggaranSiswaSeeder::class,
+            JumbotronSeeder::class,
+            GuruSeeder::class,
+            PimpinanSeeder::class,
+            MitraSeeder::class,
         ]);
     }
 }

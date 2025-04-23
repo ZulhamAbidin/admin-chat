@@ -1,658 +1,214 @@
-<!DOCTYPE html>
-<html lang="en">
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
-    <title>Master Template</title>
-    <link rel="icon" type="image/png" href="images/favicon.png" />
-    <script src="{{asset('lineone/js/app.js')}}" defer></script>
-    <link rel="stylesheet" href="{{asset('lineone/css/app.css')}}" />
-    <link rel="stylesheet" href="{{asset('lineone/css/output.css')}}">
-    <script> localStorage.getItem("_x_darkMode_on") === "true" && document.documentElement.classList.add("dark"); </script>
-  </head>
-  {{-- {{asset('')}} --}}
+<x-app-layout>
 
-<body x-data x-bind="$store.global.documentBody" class="is-header-blur navigation:horizontal">
-
-    <div class="app-preloader fixed z-50 grid h-full w-full place-content-center bg-slate-50 dark:bg-navy-900">
-        <img class="h-11 w-11 mx-auto transition-transform spinner animate-spin duration-500 rotate-[360deg]"
-            src="{{asset('lineone/images/app-logo.svg')}}" alt="logo" />
-        <p class="mt-3 font-semibold"> TABE' GESER GESERKI SEDIKIT JELEK JARINGAN TA' </p>
+    {{-- Slider Jumbotron --}}
+    <div class="bg-white dark:bg-navy-600 dark:text-primary p-6 rounded-xl">
+        @include('komponen.slider')
     </div>
 
-    <div id="root" class="min-h-100vh flex grow bg-slate-50 dark:bg-navy-900" x-cloak>
-       
-        <nav class="header before:bg-white dark:before:bg-navy-750 print:hidden">
-            <div class="header-container relative flex w-full bg-white dark:bg-navy-700 print:hidden sm:flex-col">
-                <div class="flex w-full justify-between sm:h-16">
-                    
-                    <!-- LOGO TEXT APP NAME, FLEX MEDIUM = HIDDEN -> LARGE -->
-                    <div class="w-fit items-center flex ">
-                        <button class="mr-1">
-                            <img class="h-11 w-11 transition-transform duration-500 ease-in-out hover:rotate-[360deg]" src="{{asset('lineone/images/app-logo.svg')}}" alt="logo" />
-                        </button>
-                        <span class="text-xs gap-1 flex md:text-lg pl-2 font-semibold uppercase text-slate-700 dark:text-navy-100">
-                            <span class="flex">SMKN 7 MAKASSAR</span>
-                            {{-- <span class="hidden sm:flex">Abidin</span> --}}
-                        </span>
-                    </div>
-
-                    <!-- CARI DAN DEKSTOP VIEW -->
-                    <div class="flex items-center">
-                        
-                        <!-- Main Searchbar -->
-                        <template class="flex" x-if="$store.breakpoints">
-                            <div class="flex" x-data="usePopper({placement:'bottom-end',offset:12})" @click.outside="isShowPopper && (isShowPopper = false)">
-                                <div class="relative mr-4 flex h-8">
-                                    <input placeholder="Search here..." class="w-44 form-input peer h-full rounded-full bg-slate-150 px-4 pl-9 text-xs+ text-slate-800 ring-primary/50 hover:bg-slate-200 focus:ring dark:bg-navy-900/90 dark:text-navy-100 dark:placeholder-navy-300 dark:ring-accent/50 dark:hover:bg-navy-900 dark:focus:bg-navy-900" x-ref="popperRef" />
-                                    <div class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
-                                        <svg xmlns="../www.w3.org/2000/svg.html" class="h-4.5 w-4.5 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M3.316 13.781l.73-.171-.73.171zm0-5.457l.73.171-.73-.171zm15.473 0l.73-.171-.73.171zm0 5.457l.73.171-.73-.171zm-5.008 5.008l-.171-.73.171.73zm-5.457 0l-.171.73.171-.73zm0-15.473l-.171-.73.171.73zm5.457 0l.171-.73-.171.73zM20.47 21.53a.75.75 0 101.06-1.06l-1.06 1.06zM4.046 13.61a11.198 11.198 0 010-5.115l-1.46-.342a12.698 12.698 0 000 5.8l1.46-.343zm14.013-5.115a11.196 11.196 0 010 5.115l1.46.342a12.698 12.698 0 000-5.8l-1.46.343zm-4.45 9.564a11.196 11.196 0 01-5.114 0l-.342 1.46c1.907.448 3.892.448 5.8 0l-.343-1.46zM8.496 4.046a11.198 11.198 0 015.115 0l.342-1.46a12.698 12.698 0 00-5.8 0l.343 1.46zm0 14.013a5.97 5.97 0 01-4.45-4.45l-1.46.343a7.47 7.47 0 005.568 5.568l.342-1.46zm5.457 1.46a7.47 7.47 0 005.568-5.567l-1.46-.342a5.97 5.97 0 01-4.45 4.45l.342 1.46zM13.61 4.046a5.97 5.97 0 014.45 4.45l1.46-.343a7.47 7.47 0 00-5.568-5.567l-.342 1.46zm-5.457-1.46a7.47 7.47 0 00-5.567 5.567l1.46.342a5.97 5.97 0 014.45-4.45l-.343-1.46zm8.652 15.28l3.665 3.664 1.06-1.06-3.665-3.665-1.06 1.06z" />
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <div :class="isShowPopper && 'show'" class="popper-root" x-ref="popperRoot">
-                                    <div class="popper-box flex max-h-[calc(100vh-6rem)] w-80 flex-col rounded-lg border border-slate-150 bg-white shadow-soft dark:border-navy-800 dark:bg-navy-700 dark:shadow-soft-dark">
-                                        <div class="is-scrollbar-hidden overflow-y-auto overscroll-contain pb-2">
-                                            <!-- HASIL PENCARIAN -->
-                                            <div class="mt-1 font-inter font-medium">
-                                                <a class="group flex items-center space-x-2 px-2.5 py-2 tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100" href="apps-chat.html">
-                                                    <svg xmlns="../www.w3.org/2000/svg.html"  class="h-4.5 w-4.5 text-slate-400 transition-colors group-hover:text-slate-500 group-focus:text-slate-500 dark:text-navy-300 dark:group-hover:text-navy-200 dark:group-focus:text-navy-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                                    </svg>
-                                                    <span>Chat App</span>
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </template>
-
-                        <!-- MENU KETIKA LAYAR EXTRA LARGE = DESKTOP -->
-                        <div class="is-scrollbar-hidden justify-center -mx-2 hidden  h-12 items-center space-x-2 overflow-y-auto font-inter lg:flex">
-                            <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                                @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                                <a href="pages-starter-5.html" x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                                    class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                                    :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                                    <svg class="h-6 w-6" xmlns="../www.w3.org/2000/svg.html" fill="none"
-                                        viewBox="0 0 24 24">
-                                        <path fill="currentColor" fill-opacity=".3"
-                                            d="M5 14.059c0-1.01 0-1.514.222-1.945.221-.43.632-.724 1.453-1.31l4.163-2.974c.56-.4.842-.601 1.162-.601.32 0 .601.2 1.162.601l4.163 2.974c.821.586 1.232.88 1.453 1.31.222.43.222.935.222 1.945V19c0 .943 0 1.414-.293 1.707C18.414 21 17.943 21 17 21H7c-.943 0-1.414 0-1.707-.293C5 20.414 5 19.943 5 19v-4.94Z" />
-                                        <path fill="currentColor"
-                                            d="M3 12.387c0 .267 0 .4.084.441.084.041.19-.04.4-.204l7.288-5.669c.59-.459.885-.688 1.228-.688.343 0 .638.23 1.228.688l7.288 5.669c.21.163.316.245.4.204.084-.04.084-.174.084-.441v-.409c0-.48 0-.72-.102-.928-.101-.208-.291-.355-.67-.65l-7-5.445c-.59-.459-.885-.688-1.228-.688-.343 0-.638.23-1.228.688l-7 5.445c-.379.295-.569.442-.67.65-.102.208-.102.448-.102.928v.409Z" />
-                                        <path fill="currentColor"
-                                            d="M11.5 15.5h1A1.5 1.5 0 0 1 14 17v3.5h-4V17a1.5 1.5 0 0 1 1.5-1.5Z" />
-                                        <path fill="currentColor"
-                                            d="M17.5 5h-1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5Z" />
-                                    </svg>
-                                    <span>Dashboard</span>
-                                </a>
-                            </div>
-
-
-                            <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                                @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                                <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                                    class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                                    :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                                        xmlns="../www.w3.org/2000/svg.html">
-                                        <path fill-opacity="0.5"
-                                            d="M14.2498 16C14.2498 17.5487 13.576 18.9487 12.4998 19.9025C11.5723 20.7425 10.3473 21.25 8.99976 21.25C6.10351 21.25 3.74976 18.8962 3.74976 16C3.74976 13.585 5.39476 11.5375 7.61726 10.9337C8.22101 12.4562 9.51601 13.6287 11.1173 14.0662C11.5548 14.1887 12.0185 14.25 12.4998 14.25C12.981 14.25 13.4448 14.1887 13.8823 14.0662C14.1185 14.6612 14.2498 15.3175 14.2498 16Z"
-                                            fill="currentColor" />
-                                        <path
-                                            d="M17.75 9.00012C17.75 9.68262 17.6187 10.3389 17.3825 10.9339C16.7787 12.4564 15.4837 13.6289 13.8825 14.0664C13.445 14.1889 12.9813 14.2501 12.5 14.2501C12.0187 14.2501 11.555 14.1889 11.1175 14.0664C9.51625 13.6289 8.22125 12.4564 7.6175 10.9339C7.38125 10.3389 7.25 9.68262 7.25 9.00012C7.25 6.10387 9.60375 3.75012 12.5 3.75012C15.3962 3.75012 17.75 6.10387 17.75 9.00012Z"
-                                            fill="currentColor" />
-                                        <path fill-opacity="0.3"
-                                            d="M21.25 16C21.25 18.8962 18.8962 21.25 16 21.25C14.6525 21.25 13.4275 20.7425 12.5 19.9025C13.5763 18.9487 14.25 17.5487 14.25 16C14.25 15.3175 14.1187 14.6612 13.8825 14.0662C15.4837 13.6287 16.7787 12.4562 17.3825 10.9337C19.605 11.5375 21.25 13.585 21.25 16Z"
-                                            fill="currentColor" />
-                                    </svg>
-                                    <span>Components</span>
-                                </button>
-                                <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                                    <div
-                                        class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                                    Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                                    else</a>
-                                            </li>
-                                        </ul>
-                                        <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                                    Link</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                                @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                                <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                                    class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                                    :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                                        xmlns="../www.w3.org/2000/svg.html">
-                                        <path fill-opacity="0.5"
-                                            d="M14.2498 16C14.2498 17.5487 13.576 18.9487 12.4998 19.9025C11.5723 20.7425 10.3473 21.25 8.99976 21.25C6.10351 21.25 3.74976 18.8962 3.74976 16C3.74976 13.585 5.39476 11.5375 7.61726 10.9337C8.22101 12.4562 9.51601 13.6287 11.1173 14.0662C11.5548 14.1887 12.0185 14.25 12.4998 14.25C12.981 14.25 13.4448 14.1887 13.8823 14.0662C14.1185 14.6612 14.2498 15.3175 14.2498 16Z"
-                                            fill="currentColor" />
-                                        <path
-                                            d="M17.75 9.00012C17.75 9.68262 17.6187 10.3389 17.3825 10.9339C16.7787 12.4564 15.4837 13.6289 13.8825 14.0664C13.445 14.1889 12.9813 14.2501 12.5 14.2501C12.0187 14.2501 11.555 14.1889 11.1175 14.0664C9.51625 13.6289 8.22125 12.4564 7.6175 10.9339C7.38125 10.3389 7.25 9.68262 7.25 9.00012C7.25 6.10387 9.60375 3.75012 12.5 3.75012C15.3962 3.75012 17.75 6.10387 17.75 9.00012Z"
-                                            fill="currentColor" />
-                                        <path fill-opacity="0.3"
-                                            d="M21.25 16C21.25 18.8962 18.8962 21.25 16 21.25C14.6525 21.25 13.4275 20.7425 12.5 19.9025C13.5763 18.9487 14.25 17.5487 14.25 16C14.25 15.3175 14.1187 14.6612 13.8825 14.0662C15.4837 13.6287 16.7787 12.4562 17.3825 10.9337C19.605 11.5375 21.25 13.585 21.25 16Z"
-                                            fill="currentColor" />
-                                    </svg>
-                                    <span>Components</span>
-                                </button>
-                                <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                                    <div
-                                        class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                                    Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                                    else</a>
-                                            </li>
-                                        </ul>
-                                        <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                                    Link</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                                @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                                <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                                    class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                                    :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                                        xmlns="../www.w3.org/2000/svg.html">
-                                        <path fill-opacity="0.5"
-                                            d="M14.2498 16C14.2498 17.5487 13.576 18.9487 12.4998 19.9025C11.5723 20.7425 10.3473 21.25 8.99976 21.25C6.10351 21.25 3.74976 18.8962 3.74976 16C3.74976 13.585 5.39476 11.5375 7.61726 10.9337C8.22101 12.4562 9.51601 13.6287 11.1173 14.0662C11.5548 14.1887 12.0185 14.25 12.4998 14.25C12.981 14.25 13.4448 14.1887 13.8823 14.0662C14.1185 14.6612 14.2498 15.3175 14.2498 16Z"
-                                            fill="currentColor" />
-                                        <path
-                                            d="M17.75 9.00012C17.75 9.68262 17.6187 10.3389 17.3825 10.9339C16.7787 12.4564 15.4837 13.6289 13.8825 14.0664C13.445 14.1889 12.9813 14.2501 12.5 14.2501C12.0187 14.2501 11.555 14.1889 11.1175 14.0664C9.51625 13.6289 8.22125 12.4564 7.6175 10.9339C7.38125 10.3389 7.25 9.68262 7.25 9.00012C7.25 6.10387 9.60375 3.75012 12.5 3.75012C15.3962 3.75012 17.75 6.10387 17.75 9.00012Z"
-                                            fill="currentColor" />
-                                        <path fill-opacity="0.3"
-                                            d="M21.25 16C21.25 18.8962 18.8962 21.25 16 21.25C14.6525 21.25 13.4275 20.7425 12.5 19.9025C13.5763 18.9487 14.25 17.5487 14.25 16C14.25 15.3175 14.1187 14.6612 13.8825 14.0662C15.4837 13.6287 16.7787 12.4562 17.3825 10.9337C19.605 11.5375 21.25 13.585 21.25 16Z"
-                                            fill="currentColor" />
-                                    </svg>
-                                    <span>Components</span>
-                                </button>
-                                <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                                    <div
-                                        class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                                    Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                                    else</a>
-                                            </li>
-                                        </ul>
-                                        <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                                    Link</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                                @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                                <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                                    class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                                    :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                                        xmlns="../www.w3.org/2000/svg.html">
-                                        <path fill-opacity="0.5"
-                                            d="M14.2498 16C14.2498 17.5487 13.576 18.9487 12.4998 19.9025C11.5723 20.7425 10.3473 21.25 8.99976 21.25C6.10351 21.25 3.74976 18.8962 3.74976 16C3.74976 13.585 5.39476 11.5375 7.61726 10.9337C8.22101 12.4562 9.51601 13.6287 11.1173 14.0662C11.5548 14.1887 12.0185 14.25 12.4998 14.25C12.981 14.25 13.4448 14.1887 13.8823 14.0662C14.1185 14.6612 14.2498 15.3175 14.2498 16Z"
-                                            fill="currentColor" />
-                                        <path
-                                            d="M17.75 9.00012C17.75 9.68262 17.6187 10.3389 17.3825 10.9339C16.7787 12.4564 15.4837 13.6289 13.8825 14.0664C13.445 14.1889 12.9813 14.2501 12.5 14.2501C12.0187 14.2501 11.555 14.1889 11.1175 14.0664C9.51625 13.6289 8.22125 12.4564 7.6175 10.9339C7.38125 10.3389 7.25 9.68262 7.25 9.00012C7.25 6.10387 9.60375 3.75012 12.5 3.75012C15.3962 3.75012 17.75 6.10387 17.75 9.00012Z"
-                                            fill="currentColor" />
-                                        <path fill-opacity="0.3"
-                                            d="M21.25 16C21.25 18.8962 18.8962 21.25 16 21.25C14.6525 21.25 13.4275 20.7425 12.5 19.9025C13.5763 18.9487 14.25 17.5487 14.25 16C14.25 15.3175 14.1187 14.6612 13.8825 14.0662C15.4837 13.6287 16.7787 12.4562 17.3825 10.9337C19.605 11.5375 21.25 13.585 21.25 16Z"
-                                            fill="currentColor" />
-                                    </svg>
-                                    <span>Components</span>
-                                </button>
-                                <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                                    <div
-                                        class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                                    Link</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                                    else</a>
-                                            </li>
-                                        </ul>
-                                        <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                        <ul>
-                                            <li>
-                                                <a href="#"
-                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                                    Link</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
+    {{-- Postingan Terbaru --}}
+    <div class="bg-white dark:bg-navy-600 dark:text-primary p-8 rounded-xl mt-10">
+        <section id="postingan mx-4">
+            <h1 class="text-2xl font-bold text-center mb-10">Postingan Terbaru</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach ($latestPosts as $post)
+                <div class="flex flex-col">
+                    <img class="h-44 w-full rounded-2xl object-cover object-center" src="{{ asset('storage/' . $post->cover_photo_path) }}" alt="{{ $post->photo_alt_text }}">
+                    <div class="card -mt-8 grow rounded-2xl p-4">
+                        <div>
+                            <a href="{{ route('postingan.show', $post->slug) }}" class="text-sm+ font-medium text-yellow-600 line-clamp-1 hover:text-primary focus:text-primary dark:text-navy-100 dark:hover:text-accent-light dark:focus:text-accent-light">What
+                                {{ $post->title }}</a>
                         </div>
-                        <!-- MENU DESKTOP END -->
+                        <p class="mt-2 grow line-clamp-3">
+                            {{ Str::limit(strip_tags($post->sub_title), 200) }}
+                        </p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <a href="detail.html" class="flex items-center space-x-2 text-xs hover:text-slate-800 dark:hover:text-navy-100">
+                                <div class="avatar h-6 w-6">
+                                    <img class="rounded-full" src="/lineone/images/avatar/avatar-10.jpg" alt="avatar">
+                                </div>
+                                <span class="line-clamp-1">Admin SMKN 7 Makassar</span>
+                            </a>
+                            <p class="flex shrink-0 items-center space-x-1.5 text-slate-400 dark:text-navy-300">
+                                <svg xmlns="../www.w3.org/2000/svg.html" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span class="text-xs">{{ $post->formatted_date }}</span>
+                            </p>
+                        </div>
                     </div>
-
-                    <!-- DARK MODE DAN LOGIN BUTTON -->
-                    <div class="flex items-center">
-
-                        <!-- Dark Mode Toggle -->
-                        <button @click="$store.global.isDarkModeEnabled = !$store.global.isDarkModeEnabled" class="mr-2 btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
-                            <svg x-show="$store.global.isDarkModeEnabled" x-transition:enter="transition-transform duration-200 ease-out absolute origin-top" x-transition:enter-start="scale-75" x-transition:enter-end="scale-100 static" class="h-6 w-6 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M11.75 3.412a.818.818 0 01-.07.917 6.332 6.332 0 00-1.4 3.971c0 3.564 2.98 6.494 6.706 6.494a6.86 6.86 0 002.856-.617.818.818 0 011.1 1.047C19.593 18.614 16.218 21 12.283 21 7.18 21 3 16.973 3 11.956c0-4.563 3.46-8.31 7.925-8.948a.818.818 0 01.826.404z" />
-                            </svg>
-                            <svg xmlns="../www.w3.org/2000/svg.html" x-show="!$store.global.isDarkModeEnabled" x-transition:enter="transition-transform duration-200 ease-out absolute origin-top" x-transition:enter-start="scale-75" x-transition:enter-end="scale-100 static" class="h-6 w-6 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-
-                        <!-- LOGIN BUTTON -->
-                        <!-- <a href="index.html" class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100">
-                            <svg class="size-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.3111 14.75H5.03356C3.36523 14.75 2.30189 12.9625 3.10856 11.4958L5.24439 7.60911L7.24273 3.96995C8.07689 2.45745 10.2586 2.45745 11.0927 3.96995L13.1002 7.60911L14.0627 9.35995L15.2361 11.4958C16.0427 12.9625 14.9794 14.75 13.3111 14.75Z" fill="currentColor"></path>
-                                <path fill-opacity="0.3" d="M21.1667 15.2083C21.1667 18.4992 18.4992 21.1667 15.2083 21.1667C11.9175 21.1667 9.25 18.4992 9.25 15.2083C9.25 15.0525 9.25917 14.9058 9.26833 14.75H13.3108C14.9792 14.75 16.0425 12.9625 15.2358 11.4958L14.0625 9.36C14.4292 9.28666 14.8142 9.25 15.2083 9.25C18.4992 9.25 21.1667 11.9175 21.1667 15.2083Z" fill="currentColor"></path>
-                              </svg>
-                            <span>Login<span>
-                        </a> -->
-                        
-                    </div>
-
                 </div>
-
-                <!-- MENU KETIKA LAYAR MEDIUM = TABLET-->
-                <div class="is-scrollbar-hidden sm:flex hidden lg:hidden justify-center -mx-2  h-12 items-center space-x-2 overflow-y-auto font-inter ">
-                    <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                        @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                        <a href="index.html" x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                            class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                            :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                            <svg class="h-6 w-6" xmlns="../www.w3.org/2000/svg.html" fill="none" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-opacity=".3"
-                                    d="M5 14.059c0-1.01 0-1.514.222-1.945.221-.43.632-.724 1.453-1.31l4.163-2.974c.56-.4.842-.601 1.162-.601.32 0 .601.2 1.162.601l4.163 2.974c.821.586 1.232.88 1.453 1.31.222.43.222.935.222 1.945V19c0 .943 0 1.414-.293 1.707C18.414 21 17.943 21 17 21H7c-.943 0-1.414 0-1.707-.293C5 20.414 5 19.943 5 19v-4.94Z" />
-                                <path fill="currentColor"
-                                    d="M3 12.387c0 .267 0 .4.084.441.084.041.19-.04.4-.204l7.288-5.669c.59-.459.885-.688 1.228-.688.343 0 .638.23 1.228.688l7.288 5.669c.21.163.316.245.4.204.084-.04.084-.174.084-.441v-.409c0-.48 0-.72-.102-.928-.101-.208-.291-.355-.67-.65l-7-5.445c-.59-.459-.885-.688-1.228-.688-.343 0-.638.23-1.228.688l-7 5.445c-.379.295-.569.442-.67.65-.102.208-.102.448-.102.928v.409Z" />
-                                <path fill="currentColor"
-                                    d="M11.5 15.5h1A1.5 1.5 0 0 1 14 17v3.5h-4V17a1.5 1.5 0 0 1 1.5-1.5Z" />
-                                <path fill="currentColor"
-                                    d="M17.5 5h-1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5Z" />
-                            </svg>
-                            <span>Menu</span>
-                        </a>
-                    </div>
-
-                    <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                        @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                        <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                            class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                            :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="../www.w3.org/2000/svg.html">
-                                <path
-                                    d="M5 8H19V16C19 17.8856 19 18.8284 18.4142 19.4142C17.8284 20 16.8856 20 15 20H9C7.11438 20 6.17157 20 5.58579 19.4142C5 18.8284 5 17.8856 5 16V8Z"
-                                    fill="currentColor" fill-opacity="0.3" />
-                                <path
-                                    d="M12 8L11.7608 5.84709C11.6123 4.51089 10.4672 3.5 9.12282 3.5V3.5C7.68381 3.5 6.5 4.66655 6.5 6.10555V6.10555C6.5 6.97673 6.93539 7.79026 7.66025 8.2735L9.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <path
-                                    d="M12 8L12.2392 5.84709C12.3877 4.51089 13.5328 3.5 14.8772 3.5V3.5C16.3162 3.5 17.5 4.66655 17.5 6.10555V6.10555C17.5 6.97673 17.0646 7.79026 16.3397 8.2735L14.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <rect x="4" y="8" width="16" height="3" rx="1" fill="currentColor" />
-                                <path d="M12 11V15" stroke="currentColor" stroke-linecap="round" />
-                            </svg>
-                            <span>AppSSSSs</span>
-                        </button>
-                        <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                            <div
-                                class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                            Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                            else</a>
-                                    </li>
-                                </ul>
-                                <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                            Link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                        @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                        <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                            class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                            :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="../www.w3.org/2000/svg.html">
-                                <path
-                                    d="M5 8H19V16C19 17.8856 19 18.8284 18.4142 19.4142C17.8284 20 16.8856 20 15 20H9C7.11438 20 6.17157 20 5.58579 19.4142C5 18.8284 5 17.8856 5 16V8Z"
-                                    fill="currentColor" fill-opacity="0.3" />
-                                <path
-                                    d="M12 8L11.7608 5.84709C11.6123 4.51089 10.4672 3.5 9.12282 3.5V3.5C7.68381 3.5 6.5 4.66655 6.5 6.10555V6.10555C6.5 6.97673 6.93539 7.79026 7.66025 8.2735L9.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <path
-                                    d="M12 8L12.2392 5.84709C12.3877 4.51089 13.5328 3.5 14.8772 3.5V3.5C16.3162 3.5 17.5 4.66655 17.5 6.10555V6.10555C17.5 6.97673 17.0646 7.79026 16.3397 8.2735L14.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <rect x="4" y="8" width="16" height="3" rx="1" fill="currentColor" />
-                                <path d="M12 11V15" stroke="currentColor" stroke-linecap="round" />
-                            </svg>
-                            <span>App ASDASDAs</span>
-                        </button>
-                        <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                            <div
-                                class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                            Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                            else</a>
-                                    </li>
-                                </ul>
-                                <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                            Link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                        @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                        <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                            class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                            :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="../www.w3.org/2000/svg.html">
-                                <path
-                                    d="M5 8H19V16C19 17.8856 19 18.8284 18.4142 19.4142C17.8284 20 16.8856 20 15 20H9C7.11438 20 6.17157 20 5.58579 19.4142C5 18.8284 5 17.8856 5 16V8Z"
-                                    fill="currentColor" fill-opacity="0.3" />
-                                <path
-                                    d="M12 8L11.7608 5.84709C11.6123 4.51089 10.4672 3.5 9.12282 3.5V3.5C7.68381 3.5 6.5 4.66655 6.5 6.10555V6.10555C6.5 6.97673 6.93539 7.79026 7.66025 8.2735L9.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <path
-                                    d="M12 8L12.2392 5.84709C12.3877 4.51089 13.5328 3.5 14.8772 3.5V3.5C16.3162 3.5 17.5 4.66655 17.5 6.10555V6.10555C17.5 6.97673 17.0646 7.79026 16.3397 8.2735L14.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <rect x="4" y="8" width="16" height="3" rx="1" fill="currentColor" />
-                                <path d="M12 11V15" stroke="currentColor" stroke-linecap="round" />
-                            </svg>
-                            <span>Apps Vertical</span>
-                        </button>
-                        <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                            <div
-                                class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                            Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                            else</a>
-                                    </li>
-                                </ul>
-                                <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                            Link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div x-data="usePopper({placement:'bottom-start',offset:4})"
-                        @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                        <button x-ref="popperRef" @click="isShowPopper = !isShowPopper"
-                            class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none"
-                            :class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="../www.w3.org/2000/svg.html">
-                                <path
-                                    d="M5 8H19V16C19 17.8856 19 18.8284 18.4142 19.4142C17.8284 20 16.8856 20 15 20H9C7.11438 20 6.17157 20 5.58579 19.4142C5 18.8284 5 17.8856 5 16V8Z"
-                                    fill="currentColor" fill-opacity="0.3" />
-                                <path
-                                    d="M12 8L11.7608 5.84709C11.6123 4.51089 10.4672 3.5 9.12282 3.5V3.5C7.68381 3.5 6.5 4.66655 6.5 6.10555V6.10555C6.5 6.97673 6.93539 7.79026 7.66025 8.2735L9.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <path
-                                    d="M12 8L12.2392 5.84709C12.3877 4.51089 13.5328 3.5 14.8772 3.5V3.5C16.3162 3.5 17.5 4.66655 17.5 6.10555V6.10555C17.5 6.97673 17.0646 7.79026 16.3397 8.2735L14.5 9.5"
-                                    stroke="currentColor" stroke-linecap="round" />
-                                <rect x="4" y="8" width="16" height="3" rx="1" fill="currentColor" />
-                                <path d="M12 11V15" stroke="currentColor" stroke-linecap="round" />
-                            </svg>
-                            <span>Apps</span>
-                        </button>
-                        <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                            <div
-                                class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another
-                                            Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something
-                                            else</a>
-                                    </li>
-                                </ul>
-                                <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                                <ul>
-                                    <li>
-                                        <a href="#"
-                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated
-                                            Link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
+                @endforeach
             </div>
-        </nav>
+        </section>
 
-        <main class="main-content w-full px-[var(--margin-x)]">
-            
-            <!-- MENU KETIKA LAYAR SMALL = HANDPHONE -->
-            <!-- Conditional Active bg-primary/10 text-primary dark:bg-navy-600 dark:text-accent-light -->
-            <div class="bg-white dark:bg-navy-700 border-none flex sm:hidden justify-center -mx-4 h-12 items-center overflow-y-auto font-inter ">
-                
-                <div class="inline-flex">
-                    <a href="index.html"  class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none">
-                        <svg class="h-6 w-6" xmlns="../www.w3.org/2000/svg.html" fill="none" viewBox="0 0 24 24">
-                            <path fill="currentColor" fill-opacity=".3"
-                                d="M5 14.059c0-1.01 0-1.514.222-1.945.221-.43.632-.724 1.453-1.31l4.163-2.974c.56-.4.842-.601 1.162-.601.32 0 .601.2 1.162.601l4.163 2.974c.821.586 1.232.88 1.453 1.31.222.43.222.935.222 1.945V19c0 .943 0 1.414-.293 1.707C18.414 21 17.943 21 17 21H7c-.943 0-1.414 0-1.707-.293C5 20.414 5 19.943 5 19v-4.94Z" />
-                            <path fill="currentColor"
-                                d="M3 12.387c0 .267 0 .4.084.441.084.041.19-.04.4-.204l7.288-5.669c.59-.459.885-.688 1.228-.688.343 0 .638.23 1.228.688l7.288 5.669c.21.163.316.245.4.204.084-.04.084-.174.084-.441v-.409c0-.48 0-.72-.102-.928-.101-.208-.291-.355-.67-.65l-7-5.445c-.59-.459-.885-.688-1.228-.688-.343 0-.638.23-1.228.688l-7 5.445c-.379.295-.569.442-.67.65-.102.208-.102.448-.102.928v.409Z" />
-                            <path fill="currentColor"
-                                d="M11.5 15.5h1A1.5 1.5 0 0 1 14 17v3.5h-4V17a1.5 1.5 0 0 1 1.5-1.5Z" />
-                            <path fill="currentColor"
-                                d="M17.5 5h-1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5Z" />
-                        </svg>
-                        <span>Dashboard<span>
-                    </a>
-                </div>
-    
-                <div x-data="usePopper({placement:'bottom-start',offset:4})" @click.outside="isShowPopper && (isShowPopper = false)" class="inline-flex">
-                    <button x-ref="popperRef" @click="isShowPopper = !isShowPopper" class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none":class="isShowPopper ? 'bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-300/20 active:bg-slate-300/25 dark:text-navy-200 dark:hover:text-navy-100 dark:hover:bg-navy-300/20 dark:active:bg-navy-300/25'">
-                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="../www.w3.org/2000/svg.html">
-                            <path d="M5 8H19V16C19 17.8856 19 18.8284 18.4142 19.4142C17.8284 20 16.8856 20 15 20H9C7.11438 20 6.17157 20 5.58579 19.4142C5 18.8284 5 17.8856 5 16V8Z" fill="currentColor" fill-opacity="0.3" />
-                            <path d="M12 8L11.7608 5.84709C11.6123 4.51089 10.4672 3.5 9.12282 3.5V3.5C7.68381 3.5 6.5 4.66655 6.5 6.10555V6.10555C6.5 6.97673 6.93539 7.79026 7.66025 8.2735L9.5 9.5" stroke="currentColor" stroke-linecap="round" />
-                            <path d="M12 8L12.2392 5.84709C12.3877 4.51089 13.5328 3.5 14.8772 3.5V3.5C16.3162 3.5 17.5 4.66655 17.5 6.10555V6.10555C17.5 6.97673 17.0646 7.79026 16.3397 8.2735L14.5 9.5" stroke="currentColor" stroke-linecap="round" />
-                            <rect x="4" y="8" width="16" height="3" rx="1" fill="currentColor" />
-                            <path d="M12 11V15" stroke="currentColor" stroke-linecap="round" />
-                        </svg>
-                        <span>Dashboard</span>
-                    </button>
-                    <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
-                        <div class="popper-box max-h-[calc(100vh-120px)] overflow-y-auto rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                            <ul>
-                                <li>
-                                    <a href="#" class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Another Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Something else</a>
-                                </li>
-                            </ul>
-                            <div class="my-1 h-px bg-slate-150 dark:bg-navy-500"></div>
-                            <ul>
-                                <li>
-                                    <a href="#" class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Separated Link</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="inline-flex">
-                    <a href="index.html"  class="btn space-x-2 px-2 py-1.5 text-xs+ font-medium leading-none">
-                        <svg class="h-6 w-6" xmlns="../www.w3.org/2000/svg.html" fill="none" viewBox="0 0 24 24">
-                            <path fill="currentColor" fill-opacity=".3"
-                                d="M5 14.059c0-1.01 0-1.514.222-1.945.221-.43.632-.724 1.453-1.31l4.163-2.974c.56-.4.842-.601 1.162-.601.32 0 .601.2 1.162.601l4.163 2.974c.821.586 1.232.88 1.453 1.31.222.43.222.935.222 1.945V19c0 .943 0 1.414-.293 1.707C18.414 21 17.943 21 17 21H7c-.943 0-1.414 0-1.707-.293C5 20.414 5 19.943 5 19v-4.94Z" />
-                            <path fill="currentColor"
-                                d="M3 12.387c0 .267 0 .4.084.441.084.041.19-.04.4-.204l7.288-5.669c.59-.459.885-.688 1.228-.688.343 0 .638.23 1.228.688l7.288 5.669c.21.163.316.245.4.204.084-.04.084-.174.084-.441v-.409c0-.48 0-.72-.102-.928-.101-.208-.291-.355-.67-.65l-7-5.445c-.59-.459-.885-.688-1.228-.688-.343 0-.638.23-1.228.688l-7 5.445c-.379.295-.569.442-.67.65-.102.208-.102.448-.102.928v.409Z" />
-                            <path fill="currentColor"
-                                d="M11.5 15.5h1A1.5 1.5 0 0 1 14 17v3.5h-4V17a1.5 1.5 0 0 1 1.5-1.5Z" />
-                            <path fill="currentColor"
-                                d="M17.5 5h-1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5Z" />
-                        </svg>
-                        <span>Dashboard<span>
-                    </a>
-                </div>
-
-            </div>
-            
-            <!-- KONTEN UTAMA -->
-            <div class="mx-4 mt-8 mb-4 bg-white dark:bg-navy-600 dark:text-primary p-6 rounded-xl">
-                <div class="text-justify indent-5 mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et expedita impedit ipsa facere harum, error repellat debitis quasi at perferendis delectus fugiat, optio nihil eligendi minus placeat praesentium laborum beatae vitae ratione dicta esse? Quisquam aut illo laborum quo ullam nesciunt, natus eos fuga tempore perferendis dicta cumque quas, unde sunt, exercitationem recusandae repellat aperiam iusto quae porro iste corrupti libero eius autem? Possimus culpa consequuntur, facere dicta vel officia qui. Itaque natus est amet libero exercitationem. Ex blanditiis et at est omnis qui, commodi voluptatem eius deleniti nihil minus soluta cupiditate asperiores? Veniam nemo dolores nisi, accusamus commodi itaque.
-                </div>
-
-                <div class="text-justify indent-5 mb-4">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis minima earum nesciunt excepturi iure sequi aperiam eius quam eum reiciendis qui hic nostrum, laboriosam ducimus perspiciatis laborum consequuntur quia, optio est incidunt eos omnis! Reiciendis necessitatibus inventore provident quaerat, aspernatur magnam nisi est praesentium. Unde sequi autem eaque possimus officiis.
-                </div>
-
-                <div class="text-justify indent-5">
-                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste cupiditate quidem maiores, quod repellendus nisi inventore dolores aliquid voluptates, autem, expedita magnam amet est exercitationem similique et pariatur corporis itaque?
-                </div>
-            </div>
-        </main>
-
+        <div class="flex justify-center mt-6">
+            <a href="{{ route('postingan.semua') }}" class="btn bg-primary/10 font-medium text-primary hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-accent-light/10 dark:text-accent-light dark:hover:bg-accent-light/20 dark:focus:bg-accent-light/20 dark:active:bg-accent-light/25">
+                Lihat Semua Postingan
+            </a>
+        </div>
     </div>
-    @include('filament.sisipkan.chat-bubble-guest')
-    <script> window.addEventListener("DOMContentLoaded", () => Alpine.start()); </script>
-</body>
-</html>
+
+    <div class="bg-white dark:bg-navy-600 dark:text-primary py-8 rounded-xl mt-10">
+        <section id="hitung">
+            <div class="container mx-auto text-center py-5">
+                <h2 class="text-2xl font-bold mb-6">Statistik Sekolah</h2>
+
+                <div class="grid w-full max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-5 lg:gap-20 mx-auto mt-10 justify-center">
+
+                    <!-- Total Siswa -->
+                    <div class="card p-4 text-center sm:p-5 shadow-lg rounded-lg bg-white w-full">
+                        <div class="mt-8">
+                            <i class="fa fa-users text-6xl text-primary dark:text-accent-light"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h4 class="text-xl font-semibold text-slate-600 dark:text-navy-100">Total Siswa</h4>
+                        </div>
+                        <div class="mt-5">
+                            <span class="text-4xl tracking-tight text-primary dark:text-accent-light counter" data-target="{{ $totalSiswa }}">0</span>
+                        </div>
+                        <div class="mt-8">
+                            <a href="{{ route('siswa.index') }}" class="btn rounded-full border border-slate-200 font-medium text-primary hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-500 dark:text-accent-light dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Total Guru -->
+                    <div class="card p-4 text-center sm:p-5 shadow-lg rounded-lg bg-white w-full">
+                        <div class="mt-8">
+                            <i class="fa fa-chalkboard-teacher text-6xl text-primary dark:text-accent-light"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h4 class="text-xl font-semibold text-slate-600 dark:text-navy-100">Total Guru</h4>
+                        </div>
+                        <div class="mt-5">
+                            <span class="text-4xl tracking-tight text-primary dark:text-accent-light counter" data-target="{{ $totalGuru }}">0</span>
+                        </div>
+                        <div class="mt-8">
+                            <a href="{{ route('guru.index') }}" class="btn rounded-full border border-slate-200 font-medium text-primary hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-500 dark:text-accent-light dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Total Jurusan -->
+                    <div class="card p-4 text-center sm:p-5 shadow-lg rounded-lg bg-white w-full">
+                        <div class="mt-8">
+                            <i class="fa fa-book text-6xl text-primary dark:text-accent-light"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h4 class="text-xl font-semibold text-slate-600 dark:text-navy-100">Total Jurusan</h4>
+                        </div>
+                        <div class="mt-5">
+                            <span class="text-4xl tracking-tight text-primary dark:text-accent-light counter" data-target="{{ $totalJurusan }}">0</span>
+                        </div>
+                        <div class="mt-8">
+                            <a href="{{ route('jurusan.index') }}" class="btn rounded-full border border-slate-200 font-medium text-primary hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-500 dark:text-accent-light dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Total Mitra -->
+                    <div class="card p-4 text-center sm:p-5 shadow-lg rounded-lg bg-white w-full">
+                        <div class="mt-8">
+                            <i class="fa fa-handshake text-6xl text-primary dark:text-accent-light"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h4 class="text-xl font-semibold text-slate-600 dark:text-navy-100">Total Mitra PPL</h4>
+                        </div>
+                        <div class="mt-5">
+                            <span class="text-4xl tracking-tight text-primary dark:text-accent-light counter" data-target="{{ $totalJurusan }}">0</span>
+                        </div>
+                        <div class="mt-8">
+                            <a href="{{ route('mitra.index') }}" class="btn rounded-full border border-slate-200 font-medium text-primary hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-500 dark:text-accent-light dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+    {{-- Pimpinan --}}
+    <div class="bg-white dark:bg-navy-600 dark:text-primary p-8 rounded-xl mt-10">
+        <section id="pimpinan" class="mx-4">
+            <h2 class="text-center mb-4 mt-2 text-2xl font-bold mb-6">Pimpinan Sekolah</h2>
+            <div x-init="$nextTick(()=>$el._x_swiper = new Swiper($el,{ navigation: {prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next'}, pagination: { el: '.swiper-pagination',type: 'progressbar'},lazy: true,}))" class="swiper rounded-lg">
+                <div class="swiper-wrapper">
+                    @foreach($pimpinan as $p)
+                    <div class="swiper-slide flex flex-col items-center mt-8">
+                        <img src="{{ asset('storage/' . $p->foto) }}" alt="{{ $p->nama }}" class="h-40 w-40 object-cover rounded-full border-4 border-gray-300" />
+                        <div class="text-center mt-3">
+                            <h3 class="text-lg font-semibold">{{ $p->nama }}</h3>
+                            <p class="text-gray-500">{{ $p->jabatan }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+    </div>
+
+    {{-- Get In Touch --}}
+    <div class="bg-white dark:bg-navy-600 dark:text-primary p-6 rounded-xl mt-10">
+        <div class="container px-6 py-12 mx-auto">
+            <div class="text-center">
+                <h1 class="text-2xl font-bold text-center">Kontak</h1>
+                <p>SMK Negeri 7 Makassar</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-12 mt-10 md:grid-cols-2 lg:grid-cols-3">
+                <div class="flex flex-col items-center justify-center text-center">
+                    <span class="p-3 text-blue-500 rounded-full bg-blue-100/80">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                        </svg>
+                    </span>
+
+                    <h2 class="mt-4 text-lg font-semibold">Email</h2>
+                    <p class="mt-2">smk7makassar35@gmail.comn.</p>
+                </div>
+
+                <div class="flex flex-col items-center justify-center text-center">
+                    <span class="p-3 text-blue-500 rounded-full bg-blue-100/80">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                    </span>
+
+                    <h2 class="mt-4 text-lg font-semibold">Office</h2>
+                    <p class="mt-2">Jl. Ince Nurdin No.35, Baru, Kec. Ujung Pandang, Kota Makassar, Sulawesi Selatan 90111</p>
+                </div>
+
+                <div class="flex flex-col items-center justify-center text-center">
+                    <span class="p-3 text-blue-500 rounded-full bg-blue-100/80">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                        </svg>
+                    </span>
+
+                    <h2 class="mt-4 text-lg font-semibold">Phone</h2>
+                    <p class="mt-2">04113618198</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-navy-600 dark:text-primary rounded-xl mt-10">
+        <div class="container px-6 mx-auto">
+            <div class="text-center">
+                <p class="py-6">
+                    &copy; {{ date('Y') }} SMK Negeri 7 Makassar & PPL II,  <a href="">PPG UNM Bidang Studi Informatika. </a> All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</x-app-layout>

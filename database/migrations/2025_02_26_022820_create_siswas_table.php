@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('jurusan_id')->nullable()->constrained('jurusan')->nullOnDelete();
+            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->nullOnDelete();
             $table->string('nis')->unique();
             $table->string('nama');
-            $table->string('kelas', 10);
             $table->text('alamat')->nullable();
             $table->date('tanggal_lahir')->nullable();
-        });
+            $table->timestamps();
+        });        
     }
 
     /**
